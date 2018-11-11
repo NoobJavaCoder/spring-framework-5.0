@@ -1,6 +1,7 @@
 package com.baomw.test;
 
 import com.baomw.dao.UserDao;
+import com.baomw.dao.UserDaoFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
@@ -15,9 +16,9 @@ public class Test {
 	public static void main(String[] args) {
 		AnnotationConfigApplicationContext annotationConfigApplicationContext
 													= new AnnotationConfigApplicationContext();
-		annotationConfigApplicationContext.register(UserDao.class);
+		annotationConfigApplicationContext.register(UserDaoFactory.class);
 		annotationConfigApplicationContext.refresh();
-		UserDao userDao = (UserDao) annotationConfigApplicationContext.getBean("userDao");
+		UserDao userDao = (UserDao) annotationConfigApplicationContext.getBean("bean");
 		userDao.query();
 	}
 }
