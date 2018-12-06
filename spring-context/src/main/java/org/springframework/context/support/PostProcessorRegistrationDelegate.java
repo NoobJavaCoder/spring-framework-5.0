@@ -48,17 +48,41 @@ import org.springframework.lang.Nullable;
  */
 final class PostProcessorRegistrationDelegate {
 
+	/**
+	 * 委托处理的具体执行，该方法主要执行BeanFactoryPostProcessor和BeanDefinitionRegistryPostProcessor
+	 * 的所有实现类里面的实现方法，包括spring自己实现的和我们程序员扩展的，传参为 List<BeanFactoryPostProcessor>
+	 * 通过循环列表来找到我么的所有实现类，然后依次执行我们的实现方法
+	 * 注意：由于该方法主要执行BeanDefinitionRegistryPostProcessor集成了BeanFactoryPostProcessor，在这个基础上扩展
+	 * 了一个postProcessBeanDefinitionRegistry方法，
+	 * 因此，从实现上来说BeanFactoryPostProcessor和BeanDefinitionRegistryPostProcessor是完全一样的，
+	 * 但是BeanDefinitionRegistryPostProcessor由于多扩展了一个方法，因此可以看做BeanDefinitionRegistryPostProcessor是
+	 * BeanFactoryPostProcessor的加强版（人家多一个方法啊，牛逼啊），
+	 * 在开发实际扩展中，程序员可以根据自己需要合理选择
+	 *
+	 * chinese description added by baomw
+	 *
+	 * @param beanFactory
+	 * @param beanFactoryPostProcessors
+	 */
 	public static void invokeBeanFactoryPostProcessors(
 			ConfigurableListableBeanFactory beanFactory, List<BeanFactoryPostProcessor> beanFactoryPostProcessors) {
 
 		// Invoke BeanDefinitionRegistryPostProcessors first, if any.
 		Set<String> processedBeans = new HashSet<>();
 
+		//判断比较简单，看是否是BeanDefinitionRegistry类型，如果不是就没有然后了
 		if (beanFactory instanceof BeanDefinitionRegistry) {
 			BeanDefinitionRegistry registry = (BeanDefinitionRegistry) beanFactory;
+
+			//注意这里，spring定义了两个list，因为
+			//BeanFactoryPostProcessor和BeanDefinitionRegistryPostProcessor都有自己的实现方法
+			//因此需要定义两个list分别去接收他，然后分别去执行各自的实现方法
+			//应该是比较好理解的  added by baomw
 			List<BeanFactoryPostProcessor> regularPostProcessors = new ArrayList<>();
 			List<BeanDefinitionRegistryPostProcessor> registryProcessors = new ArrayList<>();
 
+			//这个循环应该是比较简单的代码了，去循环我们的beanFactoryPostProcessors来区分出
+			//里面的实现类具体是哪种类型，然后分别add到对应的list中  added by baomw
 			for (BeanFactoryPostProcessor postProcessor : beanFactoryPostProcessors) {
 				if (postProcessor instanceof BeanDefinitionRegistryPostProcessor) {
 					BeanDefinitionRegistryPostProcessor registryProcessor =

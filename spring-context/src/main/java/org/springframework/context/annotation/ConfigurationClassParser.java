@@ -587,7 +587,13 @@ class ConfigurationClassParser {
 				ConfigurationClassParser.this.registry);
 		return group;
 	}
-
+	/**
+	 * 处理我们的@Import注解，注意我们的@Import注解传入的参数，可能有三种类型
+	 * 1，传入一个class类，直接解析
+	 * 2，传入一个registrar,需要解析这个registrar
+	 * 3，传入一个ImporterSelector,这时候会去解析ImporterSelector的实现方法中返回的数组的class
+	 * 		
+	 */
 	private void processImports(ConfigurationClass configClass, SourceClass currentSourceClass,
 			Collection<SourceClass> importCandidates, boolean checkForCircularImports) {
 
@@ -602,6 +608,7 @@ class ConfigurationClassParser {
 			this.importStack.push(configClass);
 			try {
 				for (SourceClass candidate : importCandidates) {
+					//处理我们的ImportSelector
 					if (candidate.isAssignable(ImportSelector.class)) {
 						// Candidate class is an ImportSelector -> delegate to it to determine imports
 						Class<?> candidateClass = candidate.loadClass();
@@ -615,9 +622,12 @@ class ConfigurationClassParser {
 						else {
 							String[] importClassNames = selector.selectImports(currentSourceClass.getMetadata());
 							Collection<SourceClass> importSourceClasses = asSourceClasses(importClassNames);
+							//注意可能我们ImportSelector传入的类上还有可能会Import，所以这里，spring采用了
+							//一个递归调用，解析所有的import
 							processImports(configClass, currentSourceClass, importSourceClasses, false);
 						}
 					}
+					//处理我们的Registrar
 					else if (candidate.isAssignable(ImportBeanDefinitionRegistrar.class)) {
 						// Candidate class is an ImportBeanDefinitionRegistrar ->
 						// delegate to it to register additional bean definitions
@@ -626,11 +636,14 @@ class ConfigurationClassParser {
 								BeanUtils.instantiateClass(candidateClass, ImportBeanDefinitionRegistrar.class);
 						ParserStrategyUtils.invokeAwareMethods(
 								registrar, this.environment, this.resourceLoader, this.registry);
+						//添加的一个和Importselector方式不同的map中，sprig对两种方式传入的类注册方式不同
 						configClass.addImportBeanDefinitionRegistrar(registrar, currentSourceClass.getMetadata());
 					}
 					else {
 						// Candidate class not an ImportSelector or ImportBeanDefinitionRegistrar ->
 						// process it as an @Configuration class
+
+						//最后如果是普通类，传入importStack后交由processConfigurationClass进行注册处理
 						this.importStack.registerImport(
 								currentSourceClass.getMetadata(), candidate.getMetadata().getClassName());
 						processConfigurationClass(candidate.asConfigClass(configClass));

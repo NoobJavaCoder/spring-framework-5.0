@@ -116,6 +116,12 @@ import org.springframework.lang.Nullable;
 public interface BeanFactory {
 
 	/**
+	 * 这个变量主要为了factoryBean使用（当然可能也还有其他用意），想知道这个变量的具体用意，
+	 * 需知道beanFactory接口
+	 * 对于beanFactory接口，提供了三个方法，其中有一个是Object getObject() 返回值为一个object
+	 * 由于受spring容器管理，实现改接口的类，会再spring容器中产生两个bean，使用getBean(beanName)
+	 * 获取到的是Object getObject()中返回的object,而getBean('&'+beanName)返回的才是实现该接口的对象本身
+	 *
 	 * Used to dereference a {@link FactoryBean} instance and distinguish it from
 	 * beans <i>created</i> by the FactoryBean. For example, if the bean named
 	 * {@code myJndiObject} is a FactoryBean, getting {@code &myJndiObject}
@@ -213,6 +219,7 @@ public interface BeanFactory {
 
 
 	/**
+	 * 判断当前bean和给的bean的包含关系
 	 * Does this bean factory contain a bean definition or externally registered singleton
 	 * instance with the given name?
 	 * <p>If the given name is an alias, it will be translated back to the corresponding
@@ -230,6 +237,7 @@ public interface BeanFactory {
 	boolean containsBean(String name);
 
 	/**
+	 * 判断当前bean是不是一个单例的bean
 	 * Is this bean a shared singleton? That is, will {@link #getBean} always
 	 * return the same instance?
 	 * <p>Note: This method returning {@code false} does not clearly indicate
@@ -247,6 +255,7 @@ public interface BeanFactory {
 	boolean isSingleton(String name) throws NoSuchBeanDefinitionException;
 
 	/**
+	 * 判断当前bean是不是一个原型的bean
 	 * Is this bean a prototype? That is, will {@link #getBean} always return
 	 * independent instances?
 	 * <p>Note: This method returning {@code false} does not clearly indicate
@@ -316,6 +325,7 @@ public interface BeanFactory {
 	Class<?> getType(String name) throws NoSuchBeanDefinitionException;
 
 	/**
+	 * 获取一个bean的别名
 	 * Return the aliases for the given bean name, if any.
 	 * All of those aliases point to the same bean when used in a {@link #getBean} call.
 	 * <p>If the given name is an alias, the corresponding original bean name

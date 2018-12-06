@@ -57,6 +57,10 @@ public class AnnotatedBeanDefinitionReader {
 
 
 	/**
+	 * 空壳方法调用另一个多参构造
+	 *
+	 *  chinese description added by baomw
+	 *
 	 * Create a new {@code AnnotatedBeanDefinitionReader} for the given registry.
 	 * If the registry is {@link EnvironmentCapable}, e.g. is an {@code ApplicationContext},
 	 * the {@link Environment} will be inherited, otherwise a new
@@ -86,7 +90,6 @@ public class AnnotatedBeanDefinitionReader {
 		this.conditionEvaluator = new ConditionEvaluator(registry, environment, null);
 		AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry);
 	}
-
 
 	/**
 	 * Return the BeanDefinitionRegistry that this scanner operates on.

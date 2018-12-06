@@ -11,6 +11,15 @@ import org.springframework.stereotype.Repository;
  */
 @Repository("userDao")
 public class UserDao {
+	public String getA() {
+		return a;
+	}
+
+	public void setA(String a) {
+		this.a = a;
+	}
+
+	String a ;
 
 	public void query(){
 		System.out.println("query");

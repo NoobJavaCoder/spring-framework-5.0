@@ -514,22 +514,34 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	public void refresh() throws BeansException, IllegalStateException {
 		synchronized (this.startupShutdownMonitor) {
 			// Prepare this context for refreshing.
+
+			//做一些refresh的准备工作，不重要 added by baomw
 			prepareRefresh();
 
 			// Tell the subclass to refresh the internal bean factory.
+			//先实例化一个beanfactory added by baomw
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.
+			//设置一些beanfactory所需要的一些参数，可理解为各种set：包括BeanPostProcessor等等 added by baomw
 			prepareBeanFactory(beanFactory);
 
 			try {
 				// Allows post-processing of the bean factory in context subclasses.
+				//空方法，什么都没有实现，不知道人家想干嘛，看不懂？ added by baomw
 				postProcessBeanFactory(beanFactory);
 
 				// Invoke factory processors registered as beans in the context.
+				//执行我们的BeanFactoryPostProcessor和BeanDefinitionRegistryPostProcessor
+				// 注意这里仅仅只是一个方法调用,执行我们的BeanFactoryPostProcessors
+				// added by baomw
 				invokeBeanFactoryPostProcessors(beanFactory);
 
 				// Register bean processors that intercept bean creation.
+				//注册BeanPostProcessor后置处理器，BeanPostProcessor有很多很多实现，但是有些是spring容器初始化的时候
+				//用不到的，spring会把容器初始化过程中用到的后置处理器注册进去（添加到list中去其实就是），在bean的
+				//实例化的时候去循环调用他。
+				// added by baomw
 				registerBeanPostProcessors(beanFactory);
 
 				// Initialize message source for this context.
@@ -539,12 +551,16 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				initApplicationEventMulticaster();
 
 				// Initialize other special beans in specific context subclasses.
+				//空壳方法，没有实现，没什么卵用
 				onRefresh();
 
 				// Check for listener beans and register them.
+				//注册所有的监听
 				registerListeners();
 
 				// Instantiate all remaining (non-lazy-init) singletons.
+				//很重要，完成我们所有bean的初始化，包括我们bean对象的创建，包括处理我们所有的
+				//beanPostProcessor后置处理器
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.
@@ -610,6 +626,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	}
 
 	/**
+	 * 用来创建我们的beanFactory，注意是ConfigurableListableBeanFactory类型的
+	 * 比较简单这个方法
+	 *
+	 * Chinese description added by baomw
+	 *
 	 * Tell the subclass to refresh the internal bean factory.
 	 * @return the fresh BeanFactory instance
 	 * @see #refreshBeanFactory()
@@ -684,11 +705,19 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	}
 
 	/**
+	 *	该方法用来执行所有的BeanFactoryPostProcessor和BeanDefinitionRegistryPostProcessor
+	 *	这里包括执行程序员自己定义的（就是我们说的spring扩展），以及spring内部实现的
+	 *
+	 *  chinese description added by baomw
+	 *
 	 * Instantiate and invoke all registered BeanFactoryPostProcessor beans,
 	 * respecting explicit order if given.
 	 * <p>Must be called before singleton instantiation.
 	 */
 	protected void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
+		// 为执行的主要方法，所有的BeanFactoryPostProcessor和BeanDefinitionRegistryPostProcessor的扩展方法的执行均在
+		// 这里执行，注意传参为beanFactory和我们所有实现了BeanFactoryPostProcessor和BeanDefinitionRegistryPostProcessor
+		// 的一个对象列表  added by baomw
 		PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(beanFactory, getBeanFactoryPostProcessors());
 
 		// Detect a LoadTimeWeaver and prepare for weaving, if found in the meantime

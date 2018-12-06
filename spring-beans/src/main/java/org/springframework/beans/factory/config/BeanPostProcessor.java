@@ -19,7 +19,16 @@ package org.springframework.beans.factory.config;
 import org.springframework.beans.BeansException;
 import org.springframework.lang.Nullable;
 
+import javax.annotation.PostConstruct;
+
 /**
+ * spring提供的五大后置处理器之一，可以用来插手bean的生命周期
+ * 同时也是spring的扩展点之一，可以通过实现该接口，将自己需要的个性化业务处理
+ * 在bean的产生过程中追加到bean中（可以将很多面试官按在地上摩擦的知识点之一）
+ *
+ * BeanPostProcessor接口在spring内部提供了很多spring自己的实现类
+ * 我们经常使用到的@PostConstruct便是基于BeanPostProcessor的实现之一，同时还有aop等
+ * 
  * Factory hook that allows for custom modification of new bean instances,
  * e.g. checking for marker interfaces or wrapping them with proxies.
  *

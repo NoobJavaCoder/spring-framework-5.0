@@ -24,6 +24,13 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
+ * BeanDefinitionHolder，也是一个描述类，和BeanDefinition 不同的是，这个是描述
+ * BeanDefinition和beanName以及aliases之间的关系（可能是为了后续方法传参方便）
+ * 先当看这个类的两个成员变量 BeanDefinition和beanName
+ * 作为一个BeanDefinition的Holder 可以看出，该类主要用于联系我们的
+ * BeanDefinition和beanName,即我的BeanDefinition到底描述的是哪个beanName所表示
+ * 的对象，至于具体为什么这么设计，我们先不深究，继续往下看
+ *
  * Holder for a BeanDefinition with name and aliases.
  * Can be registered as a placeholder for an inner bean.
  *

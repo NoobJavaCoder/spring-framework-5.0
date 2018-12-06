@@ -22,6 +22,14 @@ import org.springframework.core.AttributeAccessor;
 import org.springframework.lang.Nullable;
 
 /**
+ * 我们都知道，如果要描述一个人，我们可能会去定义一个domain，然后再里面去建立很多与
+ * 人相关的属性，来描述这个人（姓名，年龄等等）
+ * 同样，在我们的java当中，如果你要去描述一个java类，我们可以用Class来表示
+ * 然后在spring当中，class去描述一个baan显然已经不适用了，于是乎，他就自己开发了一个
+ * BeanDefinition类来描述我么的bd，如果阅读spring源码你会知道，在一个bean被实例化之前
+ * 对他的所有的操作，包括一些属性的设置啊，等等，都是基于BeanDefinition的操作
+ *Chinese destription added by baomw
+ *
  * A BeanDefinition describes a bean instance, which has property values,
  * constructor argument values, and further information supplied by
  * concrete implementations.

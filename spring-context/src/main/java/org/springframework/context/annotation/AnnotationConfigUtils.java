@@ -41,6 +41,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ClassUtils;
 
 /**
+ * 工具类，用于注册基于注解方式的bean定义的时候的相关配置
+ *
  * Utility class that allows for convenient registration of common
  * {@link org.springframework.beans.factory.config.BeanPostProcessor} and
  * {@link org.springframework.beans.factory.config.BeanFactoryPostProcessor}
@@ -127,6 +129,8 @@ public class AnnotationConfigUtils {
 
 
 	/**
+	 * 空壳方法，调用一个重载的registerAnnotationConfigProcessors，
+	 * 用于执行registerAnnotationConfigProcessors，不去管它
 	 * Register all relevant annotation post processors in the given registry.
 	 * @param registry the registry to operate on
 	 */
@@ -144,17 +148,21 @@ public class AnnotationConfigUtils {
 	 */
 	public static Set<BeanDefinitionHolder> registerAnnotationConfigProcessors(
 			BeanDefinitionRegistry registry, @Nullable Object source) {
-
+		//方法内具体干了，先不深究，字面意思，显而易见，是产生了一个beanFactory，类型为DefaultListableBeanFactory
 		DefaultListableBeanFactory beanFactory = unwrapDefaultListableBeanFactory(registry);
 		if (beanFactory != null) {
+			//OrderComparator bean实例化排序相关接口，可以控制bean的实例化顺序的，在bean工厂中
+			//设置排序相关属性
 			if (!(beanFactory.getDependencyComparator() instanceof AnnotationAwareOrderComparator)) {
 				beanFactory.setDependencyComparator(AnnotationAwareOrderComparator.INSTANCE);
 			}
+			//ContextAnnotationAutowireCandidateResolver 用来处理延迟加载
 			if (!(beanFactory.getAutowireCandidateResolver() instanceof ContextAnnotationAutowireCandidateResolver)) {
 				beanFactory.setAutowireCandidateResolver(new ContextAnnotationAutowireCandidateResolver());
 			}
 		}
 
+		//BeanDefinitionHolder 可以看成个map，key值为beanName或aliases，value值为BeanDefinition
 		Set<BeanDefinitionHolder> beanDefs = new LinkedHashSet<>(8);
 
 		if (!registry.containsBeanDefinition(CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME)) {
@@ -220,6 +228,14 @@ public class AnnotationConfigUtils {
 		return new BeanDefinitionHolder(definition, beanName);
 	}
 
+	/**
+	 * 做一个类型转换，如果传入的registry是DefaultListableBeanFactory类型的就直接返回
+	 * 如果是其他类型的就获取一个DefaultListableBeanFactory类型的factory
+	 * 否则返回null
+	 * 该方法是保证返回的factory类型是DefaultListableBeanFactory的
+	 * @param registry
+	 * @return
+	 */
 	@Nullable
 	private static DefaultListableBeanFactory unwrapDefaultListableBeanFactory(BeanDefinitionRegistry registry) {
 		if (registry instanceof DefaultListableBeanFactory) {

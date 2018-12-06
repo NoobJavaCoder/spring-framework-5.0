@@ -65,18 +65,21 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	public static final String SCOPE_DEFAULT = "";
 
 	/**
+	 * 默认的，不进行自动装配
 	 * Constant that indicates no autowiring at all.
 	 * @see #setAutowireMode
 	 */
 	public static final int AUTOWIRE_NO = AutowireCapableBeanFactory.AUTOWIRE_NO;
 
 	/**
+	 * 根据beanname进行自动装配，也就是我们所说的byName
 	 * Constant that indicates autowiring bean properties by name.
 	 * @see #setAutowireMode
 	 */
 	public static final int AUTOWIRE_BY_NAME = AutowireCapableBeanFactory.AUTOWIRE_BY_NAME;
 
 	/**
+	 * 根据类型来进行自动装配，也就是我们的byType
 	 * Constant that indicates autowiring bean properties by type.
 	 * @see #setAutowireMode
 	 */

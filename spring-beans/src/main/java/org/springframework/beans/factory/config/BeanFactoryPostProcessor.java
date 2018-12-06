@@ -46,6 +46,11 @@ import org.springframework.beans.BeansException;
 public interface BeanFactoryPostProcessor {
 
 	/**
+	 * 在beanFactory初始化以后，bean的实例化之前调用，在这个阶段，我们可以动态
+	 * 去修改beanFactory中的所有的beanDefinition，从而达到干预bean的实例化的过程
+	 *
+	 * Chinese description added by baomw
+	 *
 	 * Modify the application context's internal bean factory after its standard
 	 * initialization. All bean definitions will have been loaded, but no beans
 	 * will have been instantiated yet. This allows for overriding or adding

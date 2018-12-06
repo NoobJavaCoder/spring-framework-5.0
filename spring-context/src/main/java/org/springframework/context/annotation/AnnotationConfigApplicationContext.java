@@ -27,6 +27,13 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ * 实现基于注解的spring应用上下文，AnnotationConfigApplicationContext依次继承了
+ * （这里我们先了解一个java基础的概念，就是一个类继承了一个父类，那么在实例化子类的
+ * 时候，执行子类的构造方法前会依次向上优先执行父类的构造方法）
+ * GenericApplicationContext  用于生成默认的DefaultListableBeanFactory
+ *
+ * chinese description added by baomw
+ *
  * Standalone application context, accepting annotated classes as input - in particular
  * {@link Configuration @Configuration}-annotated classes, but also plain
  * {@link org.springframework.stereotype.Component @Component} types and JSR-330 compliant
@@ -58,11 +65,22 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 
 
 	/**
+	 * AnnotationConfigApplicationContext的无参构造，只用于读取器和扫描器的定义
 	 * Create a new AnnotationConfigApplicationContext that needs to be populated
 	 * through {@link #register} calls and then manually {@linkplain #refresh refreshed}.
 	 */
 	public AnnotationConfigApplicationContext() {
+		/**
+		 * 根据名称，显而易见，定义了一个读取器，AnnotatedBeanDefinitionReader根据名称，
+		 * 可以知道这个读取器是用来读BeanDefinition的，而且是基于注解的BeanDefinition
+		 *  chinese description added by baomw
+		 */
 		this.reader = new AnnotatedBeanDefinitionReader(this);
+		/**
+		 * 根据名称，显而易见，定义了一个扫描器，AnnotatedBeanDefinitionScanner根据名称，
+		 * 可以知道这个扫描器是用来读BeanDefinition的，而且是基于注解的BeanDefinition
+		 *  chinese description added by baomw
+		 */
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
 	}
 
