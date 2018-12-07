@@ -528,7 +528,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 			try {
 				// Allows post-processing of the bean factory in context subclasses.
-				//空方法，什么都没有实现，不知道人家想干嘛，看不懂？ added by baomw
+				//空方法，什么都没有实现，不知道人家想干嘛，可能是为了后期扩展吧，看不懂？ added by baomw
 				postProcessBeanFactory(beanFactory);
 
 				// Invoke factory processors registered as beans in the context.
@@ -729,6 +729,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	}
 
 	/**
+	 * 空壳方法，直接调用PostProcessorRegistrationDelegate.registerBeanPostProcessors(beanFactory, this);
+	 * 不用关注
 	 * Instantiate and invoke all registered BeanPostProcessor beans,
 	 * respecting explicit order if given.
 	 * <p>Must be called before any instantiation of application beans.

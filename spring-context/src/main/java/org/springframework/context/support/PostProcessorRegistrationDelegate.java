@@ -205,9 +205,19 @@ final class PostProcessorRegistrationDelegate {
 		beanFactory.clearMetadataCache();
 	}
 
+	/**
+	 * 这便是我们的明星方法了，主要用于注册我们spring容器在后期初始化bean的过程中所需要的BeanPostProcessor
+	 * 后置处理器，有我们spring内置的后置处理器，也有我们程序员自定义的后置处理器
+	 * 比如我们大名鼎鼎的AOP就是在这里被add进去的,比如我们的@Postcontract等等
+	 *
+	 * Chinese ddescription	 added by baomw
+	 * @param beanFactory
+	 * @param applicationContext
+	 */
 	public static void registerBeanPostProcessors(
 			ConfigurableListableBeanFactory beanFactory, AbstractApplicationContext applicationContext) {
-
+		//beanFactory.getBeanNamesForType(XXX)，这个是spring的beanFactory的一个重要方法，可以根据我们传进去的类型，去找到
+		//我们所有的beanName，这里呢就是找到我们所有实现BeanPostProcessor接口的beanName
 		String[] postProcessorNames = beanFactory.getBeanNamesForType(BeanPostProcessor.class, true, false);
 
 		// Register BeanPostProcessorChecker that logs an info message when
@@ -222,6 +232,8 @@ final class PostProcessorRegistrationDelegate {
 		List<BeanPostProcessor> internalPostProcessors = new ArrayList<>();
 		List<String> orderedPostProcessorNames = new ArrayList<>();
 		List<String> nonOrderedPostProcessorNames = new ArrayList<>();
+
+		//循环注册我们bdMap里面的BeanPostProcessor
 		for (String ppName : postProcessorNames) {
 			if (beanFactory.isTypeMatch(ppName, PriorityOrdered.class)) {
 				BeanPostProcessor pp = beanFactory.getBean(ppName, BeanPostProcessor.class);
@@ -274,6 +286,12 @@ final class PostProcessorRegistrationDelegate {
 		beanFactory.addBeanPostProcessor(new ApplicationListenerDetector(applicationContext));
 	}
 
+	/**
+	 * 排序相关，因为我们的后置处理器，可以实现我们的ordered接口，然后通过设置一个执行的优先级，来控制先后的执行顺序
+	 * Chinese description added by baomw
+	 * @param postProcessors
+	 * @param beanFactory
+	 */
 	private static void sortPostProcessors(List<?> postProcessors, ConfigurableListableBeanFactory beanFactory) {
 		Comparator<Object> comparatorToUse = null;
 		if (beanFactory instanceof DefaultListableBeanFactory) {

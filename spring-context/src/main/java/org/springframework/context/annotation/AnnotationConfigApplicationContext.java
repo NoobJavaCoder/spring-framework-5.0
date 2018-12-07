@@ -79,6 +79,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 		/**
 		 * 根据名称，显而易见，定义了一个扫描器，AnnotatedBeanDefinitionScanner根据名称，
 		 * 可以知道这个扫描器是用来读BeanDefinition的，而且是基于注解的BeanDefinition
+		 * 但是这个扫描器在这里是没有用到的，这个主要是为了我们自定义的扫描起作用
 		 *  chinese description added by baomw
 		 */
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
